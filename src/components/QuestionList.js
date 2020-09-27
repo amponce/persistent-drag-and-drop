@@ -85,9 +85,11 @@ const Container = styled.div`
 
 const Rect = styled.div.attrs((props) => ({
   style: {
-    transition: props.isDragging ? "none" : "all 500ms"
+    transition: props.isDragging ? "none" : "all 500ms",
+    opacity: props.isDragging ? 0.7 : 1
   }
 }))`
+  font-family: "Raleway", sans-serif;
   width: 450px;
   user-select: none;
   height: ${HEIGHT}px;
@@ -97,8 +99,15 @@ const Rect = styled.div.attrs((props) => ({
   align-items: center;
   justify-content: center;
   position: absolute;
+  border-radius: 5px;
+  background: lightblue;
+  text-transform: uppercase;
   top: ${({ top }) => 100 + top}px;
   left: calc(50vw - 150px);
-  font-size: 20px;
-  color: #777;
+  font-size: 14.5px;
+  color: #fff;
+  letter-spacing: 2px;
+  :nth-child(1) {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  }
 `;
