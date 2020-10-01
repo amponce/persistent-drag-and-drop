@@ -1,12 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import QuestionList from "./components/QuestionList";
-
-const questions = [
-  "When is good, good enough?",
-  "Do aliens exist?",
-  "What is the most googled question?"
-];
+import { questions } from "./components/JsonInput";
 
 const App = () => {
   return (

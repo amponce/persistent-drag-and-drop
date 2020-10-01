@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useEffect } from "react";
 import styled from "styled-components";
 import DragAndDrop from "./DragAndDrop";
 import usePersistedState from "../hooks/usePersistedState";
+import JsonInput from "./JsonInput";
 
 const HEIGHT = 80;
 
@@ -59,18 +60,21 @@ const QuestionList = ({ questions }) => {
         const draggedTop = state.order.indexOf(index) * (HEIGHT + 10);
 
         return (
-          <DragAndDrop
-            key={index}
-            id={index}
-            onDrag={handleDrag}
-            onDragEnd={handleDragEnd}
-          >
-            <Rect isDragging={isDragging} top={isDragging ? draggedTop : top}>
-              {index}
-            </Rect>
-          </DragAndDrop>
+          <>
+            <DragAndDrop
+              key={index}
+              id={index}
+              onDrag={handleDrag}
+              onDragEnd={handleDragEnd}
+            >
+              <Rect isDragging={isDragging} top={isDragging ? draggedTop : top}>
+                {index}
+              </Rect>
+            </DragAndDrop>
+          </>
         );
       })}
+      <JsonInput />
     </Container>
   );
 };
