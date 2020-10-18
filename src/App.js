@@ -6,7 +6,7 @@ const questions = {
   lists: [
     {
       id: "0",
-      text: "To Do",
+      text: "Todo",
       tasks: [{ id: "c0", text: "Generate app scaffold" }]
     },
     {
