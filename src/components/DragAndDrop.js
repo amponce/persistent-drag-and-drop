@@ -10,6 +10,7 @@ const initialState = {
 
 const DragAndDrop = ({ children, id, onDrag, onDragEnd }) => {
   const [drag, setDrag] = useState(initialState);
+
   // Mouse down event
   const handleMouseDown = useCallback(({ clientX, clientY }) => {
     setDrag((drag) => ({
