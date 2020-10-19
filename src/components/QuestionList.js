@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useEffect } from "react";
+import React, { useCallback, useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import DragAndDrop from "./DragAndDrop";
-import usePersistedState from "../hooks/usePersistedState";
+// import usePersistedState from "../hooks/usePersistedState";
 
 const HEIGHT = 80;
 
@@ -16,10 +16,7 @@ const QuestionList = ({ questions }) => {
   );
 
   //  list changes to local storage
-  const [state, setState] = usePersistedState(
-    "update-list",
-    defaultValue || questions
-  );
+  const [state, setState] = useState(defaultValue || questions);
 
   const handleDrag = useCallback(
     ({ translation, id }) => {
@@ -56,7 +53,7 @@ const QuestionList = ({ questions }) => {
 
   return (
     <Container>
-      {questions.lists.map((list, index) => {
+      {questions.map((list, index) => {
         const isDragging = state.draggedIndex === index;
         const top = state.dragOrder.indexOf(index) * (HEIGHT + 10);
         const draggedTop = state.order.indexOf(index) * (HEIGHT + 10);
@@ -69,11 +66,11 @@ const QuestionList = ({ questions }) => {
             onDragEnd={handleDragEnd}
           >
             <Rect
-              key={list.text.id}
+              key={list.id}
               isDragging={isDragging}
               top={isDragging ? draggedTop : top}
             >
-              {list.text}
+              {list}
             </Rect>
           </DragAndDrop>
         );
