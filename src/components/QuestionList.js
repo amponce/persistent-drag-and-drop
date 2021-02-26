@@ -1,22 +1,19 @@
-import React, { useCallback, useMemo, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import DragAndDrop from "./DragAndDrop";
-// import usePersistedState from "../hooks/usePersistedState";
+
+import usePersistedState from "../hooks/usePersistedState";
 
 const HEIGHT = 80;
 
 const QuestionList = ({ questions }) => {
-  const defaultValue = useMemo(
-    () => ({
-      order: questions,
-      dragOrder: questions,
-      draggedIndex: null
-    }),
-    [questions]
-  );
+  const initialState = {
+    order: questions,
+    dragOrder: questions,
+    draggedIndex: null
+  };
 
-  //  list changes to local storage
-  const [state, setState] = useState(defaultValue || questions);
+  const [state, setState] = useState(initialState);
 
   const handleDrag = useCallback(
     ({ translation, id }) => {
@@ -47,30 +44,26 @@ const QuestionList = ({ questions }) => {
     }));
   }, [setState]);
 
-  useEffect(() => {
-    console.log("Update order: ", state && state.dragOrder);
-  }, [state]);
-
   return (
     <Container>
-      {questions.map((list, index) => {
+      {questions.map((item, index) => {
         const isDragging = state.draggedIndex === index;
         const top = state.dragOrder.indexOf(index) * (HEIGHT + 10);
         const draggedTop = state.order.indexOf(index) * (HEIGHT + 10);
 
         return (
           <DragAndDrop
-            key={list.id}
+            key={index}
             id={index}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
           >
             <Rect
-              key={list.id}
+              key={item.id}
               isDragging={isDragging}
               top={isDragging ? draggedTop : top}
             >
-              {list}
+              {item.text}
             </Rect>
           </DragAndDrop>
         );
@@ -101,7 +94,7 @@ const Rect = styled.div.attrs((props) => ({
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: ${({ top }) => 100 + top}px;
+  top: ${({ top }) => 200 + top}px;
   left: calc(50vw - 150px);
   font-size: 20px;
   color: #777;
