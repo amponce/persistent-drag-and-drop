@@ -1,19 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import DragAndDrop from "./DragAndDrop";
-
-import usePersistedState from "../hooks/usePersistedState";
+import Draggable from "./DragAndDrop";
 
 const HEIGHT = 80;
 
 const QuestionList = ({ questions }) => {
-  const initialState = {
+  const defaultValue = {
     order: questions,
     dragOrder: questions,
     draggedIndex: null
   };
 
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(defaultValue);
 
   const handleDrag = useCallback(
     ({ translation, id }) => {
@@ -52,20 +50,16 @@ const QuestionList = ({ questions }) => {
         const draggedTop = state.order.indexOf(index) * (HEIGHT + 10);
 
         return (
-          <DragAndDrop
+          <Draggable
             key={index}
             id={index}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
           >
-            <Rect
-              key={item.id}
-              isDragging={isDragging}
-              top={isDragging ? draggedTop : top}
-            >
+            <Rect isDragging={isDragging} top={isDragging ? draggedTop : top}>
               {item.text}
             </Rect>
-          </DragAndDrop>
+          </Draggable>
         );
       })}
     </Container>
@@ -75,7 +69,6 @@ const QuestionList = ({ questions }) => {
 export default QuestionList;
 
 const Container = styled.div`
-  background: #eee;
   width: 100vw;
   min-height: 100vh;
 `;
@@ -85,7 +78,7 @@ const Rect = styled.div.attrs((props) => ({
     transition: props.isDragging ? "none" : "all 500ms"
   }
 }))`
-  width: 450px;
+  width: 300px;
   user-select: none;
   height: ${HEIGHT}px;
   background: #fff;
@@ -94,7 +87,7 @@ const Rect = styled.div.attrs((props) => ({
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: ${({ top }) => 200 + top}px;
+  top: ${({ top }) => 100 + top}px;
   left: calc(50vw - 150px);
   font-size: 20px;
   color: #777;

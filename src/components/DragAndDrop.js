@@ -1,81 +1,76 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 
-const COORDS = { x: 0, y: 0 };
+const POSITION = { x: 0, y: 0 };
 
-const initialState = {
-  isDragging: false,
-  origin: COORDS, // Initial cursor position
-  translation: COORDS // Postion relative to Origin
-};
+const Draggable = ({ children, id, onDrag, onDragEnd }) => {
+  const [state, setState] = useState({
+    isDragging: false,
+    origin: POSITION,
+    translation: POSITION
+  });
 
-const DragAndDrop = ({ children, id, onDrag, onDragEnd }) => {
-  const [drag, setDrag] = useState(initialState);
-
-  // Mouse down event
   const handleMouseDown = useCallback(({ clientX, clientY }) => {
-    setDrag((drag) => ({
-      ...drag,
+    setState((state) => ({
+      ...state,
       isDragging: true,
       origin: { x: clientX, y: clientY }
     }));
   }, []);
 
-  // Mouse move event
   const handleMouseMove = useCallback(
     ({ clientX, clientY }) => {
       const translation = {
-        x: clientX - drag.origin.x,
-        y: clientY - drag.origin.y
+        x: clientX - state.origin.x,
+        y: clientY - state.origin.y
       };
-      setDrag((state) => ({
+
+      setState((state) => ({
         ...state,
         translation
       }));
 
       onDrag({ translation, id });
     },
-    [drag.origin, onDrag, id]
+    [state.origin, onDrag, id]
   );
 
-  // Mouse up event
   const handleMouseUp = useCallback(() => {
-    setDrag((drag) => ({
-      ...drag,
+    setState((state) => ({
+      ...state,
       isDragging: false
     }));
+
     onDragEnd();
   }, [onDragEnd]);
 
   useEffect(() => {
-    if (drag.isDragging) {
+    if (state.isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleMouseUp);
     } else {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
 
-      setDrag((drag) => ({ ...drag, translation: COORDS }));
+      setState((state) => ({ ...state, translation: { x: 0, y: 0 } }));
     }
-  }, [drag.isDragging, handleMouseMove, handleMouseUp]);
+  }, [state.isDragging, handleMouseMove, handleMouseUp]);
 
   const styles = useMemo(
     () => ({
-      cursor: drag.isDragging ? "-webkit-grabbing" : "-webkit-grab",
-      transform: `translate(${drag.translation.x}px, ${drag.translation.y}px)`,
-      transition: drag.isDragging ? "none" : "transform 500ms",
-      zIndex: drag.isDragging ? 2 : 1,
-      position: drag.isDragging ? "absolute" : "relative"
+      cursor: state.isDragging ? "-webkit-grabbing" : "-webkit-grab",
+      transform: `translate(${state.translation.x}px, ${state.translation.y}px)`,
+      transition: state.isDragging ? "none" : "transform 500ms",
+      zIndex: state.isDragging ? 2 : 1,
+      position: state.isDragging ? "absolute" : "relative"
     }),
-    [drag.isDragging, drag.translation]
+    [state.isDragging, state.translation]
   );
 
   return (
-    <div>
-      <div style={styles} onMouseDown={handleMouseDown}>
-        {children}
-      </div>
+    <div style={styles} onMouseDown={handleMouseDown}>
+      {children}
     </div>
   );
 };
 
-export default DragAndDrop;
+export default Draggable;

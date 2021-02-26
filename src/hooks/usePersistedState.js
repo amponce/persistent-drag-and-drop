@@ -1,14 +1,12 @@
-import React from "react";
+import { useState, useEffect } from "react";
 
-const usePersistedState = (key, defaultValue) => {
-  const [state, setState] = React.useState(() => {
+export const usePersistedState = (key, defaultValue) => {
+  const [state, setState] = useState(() => {
     const persistedState = localStorage.getItem(key);
     return persistedState ? JSON.parse(persistedState) : defaultValue;
   });
-  React.useEffect(() => {
+  useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(state));
   }, [state, key]);
   return [state, setState];
 };
-
-export default usePersistedState;
